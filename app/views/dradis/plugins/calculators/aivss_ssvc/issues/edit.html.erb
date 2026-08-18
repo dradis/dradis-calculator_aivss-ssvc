@@ -1,0 +1,69 @@
+<% content_for :title, 'Edit AIVSS-SSVC score' %>
+
+<% content_for :sidebar do %>
+  <%= render 'issues/sidebar' %>
+<% end %>
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <%= link_to current_project.name, main_app.project_path(current_project) %>
+  </li>
+  <li class="breadcrumb-item">
+    <%= link_to 'All issues', main_app.project_issues_path(current_project) %>
+  </li>
+  <li class="breadcrumb-item">
+    <%= link_to @issue.title? ? @issue.title : "Issue ##{@issue.id}", main_app.project_issue_path(current_project, @issue) %>
+  </li>
+  <li class="breadcrumb-item active">
+    AIVSS-SSVC Risk Scoring
+  </li>
+</ol>
+
+<div class="content-container">
+  <h4 class="header-underline">Edit AIVSS-SSVC Risk Scoring</h4>
+  <div id="issues_editor">
+    <div class="inner note-text-inner">
+
+      <%# This view renders between the main sidebar and the secondary issue
+          sidebar, so it does not have the width for the standalone page's
+          side-by-side layout. Tab it, the way CVSS and DREAD do, keeping the
+          live score in the Result pill. %>
+      <%= simple_form_for [:aivss_ssvc, current_project, @issue], method: :patch do |f| %>
+
+        <div class="aivss-ssvc-calculator" data-behavior="aivss-ssvc-calc">
+          <ul class="nav nav-pills w-100" id="aivss-ssvc-tabs">
+            <li class="nav-item">
+              <a href="#aivss-ssvc-edit-inputs" data-bs-toggle="pill" class="nav-link active">Inputs</a>
+            </li>
+            <li class="nav-item">
+              <a href="#aivss-ssvc-edit-factors" data-bs-toggle="pill" class="nav-link">Capability Factors</a>
+            </li>
+            <li class="nav-item pull-right">
+              <a href="#aivss-ssvc-edit-result" data-bs-toggle="pill" class="nav-link">
+                Result: <span data-behavior="aivss-ssvc-risk-score">0</span>
+                (<span data-behavior="aivss-ssvc-outcome-text">&mdash;</span>)
+              </a>
+            </li>
+          </ul>
+
+          <div class="tab-content mt-4">
+            <div class="tab-pane active" id="aivss-ssvc-edit-inputs">
+              <%= render 'dradis/plugins/calculators/aivss_ssvc/base/inputs' %>
+            </div>
+            <div class="tab-pane" id="aivss-ssvc-edit-factors">
+              <%= render 'dradis/plugins/calculators/aivss_ssvc/base/factors' %>
+            </div>
+            <div class="tab-pane" id="aivss-ssvc-edit-result">
+              <%= render 'dradis/plugins/calculators/aivss_ssvc/base/results' %>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <%= f.button :submit, nil, class: 'btn btn-primary' %> or
+          <%= link_to 'Cancel', main_app.project_issue_path(current_project, @issue), class: 'cancel-link' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

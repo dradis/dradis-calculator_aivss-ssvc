@@ -1,0 +1,18 @@
+<%= content_tag :div, class: 'page-header' do %>
+  <h1>AIVSS-SSVC Calculator</h1>
+<% end %>
+
+<p class="lead">Use this page to compute the <abbr title="AI Vulnerability Scoring System — Stakeholder-Specific Vulnerability Categorization">AIVSS-SSVC</abbr> risk score of a given finding, and to select Defer, Scheduled, Out-of-Cycle, or Immediate from the SSVC decision matrix.</p>
+
+<div class="aivss-ssvc-calculator" data-behavior="aivss-ssvc-calc">
+  <div class="row">
+    <div class="col-lg-7">
+      <%= render 'dradis/plugins/calculators/aivss_ssvc/base/inputs' %>
+      <%= render 'dradis/plugins/calculators/aivss_ssvc/base/factors' %>
+    </div>
+
+    <div class="col-lg-5">
+      <%= render 'dradis/plugins/calculators/aivss_ssvc/base/results' %>
+    </div>
+  </div>
+</div>

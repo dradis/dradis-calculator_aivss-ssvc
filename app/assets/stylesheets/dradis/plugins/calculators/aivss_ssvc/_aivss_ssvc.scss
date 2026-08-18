@@ -1,0 +1,141 @@
+.aivss-ssvc-group {
+  margin-bottom: 2rem;
+}
+
+.aivss-ssvc-section-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.aivss-ssvc-hint,
+.aivss-ssvc-help {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.aivss-ssvc-field {
+  margin-bottom: 1.5rem;
+
+  .aivss-ssvc-label {
+    font-weight: 600;
+    margin-bottom: 0.125rem;
+  }
+
+  .aivss-ssvc-help {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.aivss-ssvc-factors {
+  td {
+    vertical-align: middle;
+  }
+
+  .aivss-ssvc-factor-name {
+    display: block;
+    font-weight: 600;
+  }
+
+  .aivss-ssvc-factor-desc,
+  .aivss-ssvc-factor-category {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+}
+
+.aivss-ssvc-results {
+  background-color: var(--primary-bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: $border-radius;
+  padding: 1.25rem;
+  position: sticky;
+  top: 1rem;
+}
+
+.aivss-ssvc-kpis {
+  display: grid;
+  gap: 0.75rem;
+  // 2-up in the narrow results column on the standalone page, 4-up in the
+  // full-width Result tab on the issue view.
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  margin-bottom: 1.25rem;
+}
+
+.aivss-ssvc-kpi {
+  background-color: var(--primary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: $border-radius;
+  padding: 0.75rem;
+
+  .aivss-ssvc-kpi-name {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+  }
+
+  .aivss-ssvc-kpi-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+  }
+
+  .aivss-ssvc-kpi-mini {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    margin-bottom: 0;
+  }
+}
+
+.aivss-ssvc-outcome {
+  background-color: var(--primary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: $border-radius;
+  margin-bottom: 1.25rem;
+  padding: 0.75rem;
+
+  .aivss-ssvc-outcome-title {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .aivss-ssvc-subtle {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin: 0.75rem 0 0;
+  }
+}
+
+.aivss-ssvc-badge {
+  border-radius: 2rem;
+  color: $grey-900;
+  display: inline-block;
+  font-weight: 700;
+  padding: 0.35rem 0.9rem;
+
+  &.aivss-ssvc-badge-defer {
+    background-color: $green-200;
+  }
+
+  &.aivss-ssvc-badge-scheduled {
+    background-color: $yellow-200;
+  }
+
+  &.aivss-ssvc-badge-out-of-cycle {
+    background-color: $orange-200;
+  }
+
+  &.aivss-ssvc-badge-immediate {
+    background-color: $red-200;
+  }
+}
+
+.aivss-ssvc-output-textarea {
+  font-family: var(--bs-font-monospace);
+  font-size: 0.8rem;
+}

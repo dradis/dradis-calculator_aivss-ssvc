@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AIVSS-SSVC Calculator | Dradis Framework</title>
+    <%= stylesheet_link_tag    'dradis/plugins/calculators/aivss_ssvc/base', media: 'all', 'data-turbo-track': 'reload' %>
+    <%= javascript_include_tag 'dradis/plugins/calculators/aivss_ssvc/base', 'data-turbo-track': 'reload' %>
+    <%= csrf_meta_tags %>
+    <%= javascript_importmap_tags %>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body class="authenticated">
+    <div class="container">
+      <nav class="navbar">
+        <a href="javascript:void(0)" class="navbar-brand">AIVSS-SSVC Calculator</a>
+        <ul class="navbar-nav pull-right">
+          <li class="nav-item">
+            <%= link_to main_app.root_path, class: 'nav-link', data: { turbo: false } do %>
+            Back to the app  &rarr;
+            <% end %>
+          </li>
+        </ul>
+      </nav>
+
+      <%= yield %>
+    </div>
+  </body>
+</html>

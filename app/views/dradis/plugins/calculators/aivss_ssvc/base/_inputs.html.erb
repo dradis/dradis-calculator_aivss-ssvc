@@ -1,0 +1,58 @@
+<%
+  v1 = Dradis::Plugins::Calculators::AivssSsvc::V1
+
+  inputs = [
+    {
+      id: 'threat',
+      label: 'P(Threat) — exploitation state',
+      help: 'None: no evidence and no public PoC. Public PoC: known method exists. Active: reliable in-the-wild exploitation.',
+      options: v1::THREAT_LEVELS,
+      field: 'AIVSS-SSVC.Threat',
+      value_field: 'AIVSS-SSVC.Threat.Value'
+    },
+    {
+      id: 'vulnerability',
+      label: 'P(Vulnerability) — exploit success probability',
+      help: 'Maps your control posture across the ten agent weakness categories to a probability for exploit success.',
+      options: v1::VULNERABILITY_POSTURES,
+      field: 'AIVSS-SSVC.Vulnerability',
+      value_field: 'AIVSS-SSVC.Vulnerability.Value'
+    },
+    {
+      id: 'impact',
+      label: 'Impact — systemic consequence',
+      help: 'Contained: limited blast radius. Significant: major business function disruption. Critical: existential or safety-critical.',
+      options: v1::IMPACT_LEVELS,
+      field: 'AIVSS-SSVC.Impact',
+      value_field: 'AIVSS-SSVC.Impact.Value'
+    }
+  ]
+%>
+
+<section class="aivss-ssvc-group">
+  <h3 class="aivss-ssvc-section-title">Inputs</h3>
+  <p class="aivss-ssvc-hint">Set exploitation state, vulnerability posture, and systemic impact, then score the ten capability factors. The calculator computes category averages, classifies the agent level, calculates the numeric score, and maps the qualitative triple to the SSVC outcome.</p>
+
+  <% inputs.each do |input| %>
+    <div class="aivss-ssvc-field">
+      <label class="form-label aivss-ssvc-label" for="aivss-ssvc-<%= input[:id] %>"><%= input[:label] %></label>
+      <p class="aivss-ssvc-help"><%= input[:help] %></p>
+      <select
+        id="aivss-ssvc-<%= input[:id] %>"
+        class="form-select"
+        data-behavior="aivss-ssvc-input"
+        data-input="<%= input[:id] %>"
+        data-field="<%= input[:field] %>"
+        data-value-field="<%= input[:value_field] %>"
+        data-combobox-config="no-combobox">
+        <% input[:options].each do |option| %>
+          <option
+            value="<%= option[:key] %>"
+            data-score="<%= option[:value] %>"
+            data-label="<%= option[:label] %>"
+            <%= 'selected' if @aivss_ssvc_selection[input[:id]] == option[:key] %>><%= "#{option[:label]} (#{option[:value]})" %></option>
+        <% end %>
+      </select>
+    </div>
+  <% end %>
+</section>
