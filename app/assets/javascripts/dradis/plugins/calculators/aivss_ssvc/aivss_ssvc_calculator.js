@@ -112,10 +112,15 @@ document.addEventListener('turbo:load', () => {
       return select.options[select.selectedIndex];
     }
 
-    categoryScores(category, scores) {
-      return this.factors
+    categoryAverage(category) {
+      const scores = this.factors
         .filter((select) => select.dataset.category === category)
-        .map((select) => scores[select.dataset.factor]);
+        .map((select) => {
+          const value = Number(select.value);
+          return Number.isFinite(value) ? value : 1;
+        });
+
+      return this.avg(scores);
     }
 
     // querySelectorAll, not querySelector: on the issue view the score and the
@@ -139,15 +144,9 @@ document.addEventListener('turbo:load', () => {
       const pVuln = Number(vulnOption.dataset.score);
       const impactValue = Number(impactOption.dataset.score);
 
-      const scores = {};
-      this.factors.forEach((select) => {
-        const value = Number(select.value);
-        scores[select.dataset.factor] = Number.isFinite(value) ? value : 1;
-      });
-
-      const aAvg = this.avg(this.categoryScores('A', scores));
-      const bAvg = this.avg(this.categoryScores('B', scores));
-      const cAvg = this.avg(this.categoryScores('C', scores));
+      const aAvg = this.categoryAverage('A');
+      const bAvg = this.categoryAverage('B');
+      const cAvg = this.categoryAverage('C');
 
       const agent = this.classifyAgent(aAvg, bAvg, cAvg);
 

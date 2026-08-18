@@ -27,6 +27,33 @@ module Dradis::Plugins::Calculators::AivssSsvc
       { key: 'critical',    label: 'Critical',    value: 10 }
     ].freeze
 
+    INPUTS = [
+      {
+        id: 'threat',
+        field: 'AIVSS-SSVC.Threat',
+        value_field: 'AIVSS-SSVC.Threat.Value',
+        label: 'P(Threat) — exploitation state',
+        help: 'None: no evidence and no public PoC. Public PoC: known method exists. Active: reliable in-the-wild exploitation.',
+        options: THREAT_LEVELS
+      },
+      {
+        id: 'vulnerability',
+        field: 'AIVSS-SSVC.Vulnerability',
+        value_field: 'AIVSS-SSVC.Vulnerability.Value',
+        label: 'P(Vulnerability) — exploit success probability',
+        help: 'Maps your control posture across the ten agent weakness categories to a probability for exploit success.',
+        options: VULNERABILITY_POSTURES
+      },
+      {
+        id: 'impact',
+        field: 'AIVSS-SSVC.Impact',
+        value_field: 'AIVSS-SSVC.Impact.Value',
+        label: 'Impact — systemic consequence',
+        help: 'Contained: limited blast radius. Significant: major business function disruption. Critical: existential or safety-critical.',
+        options: IMPACT_LEVELS
+      }
+    ].freeze
+
     CATEGORIES = {
       'A' => 'A — Execution Power',
       'B' => 'B — Environment & Adaptation',
@@ -96,12 +123,12 @@ module Dradis::Plugins::Calculators::AivssSsvc
     def self.selection_from_fields(issue_fields = {})
       issue_fields ||= {}
 
-      selection = {
-        'threat'        => key_for(THREAT_LEVELS, issue_fields['AIVSS-SSVC.Threat']) || DEFAULTS['threat'],
-        'vulnerability' => key_for(VULNERABILITY_POSTURES, issue_fields['AIVSS-SSVC.Vulnerability']) || DEFAULTS['vulnerability'],
-        'impact'        => key_for(IMPACT_LEVELS, issue_fields['AIVSS-SSVC.Impact']) || DEFAULTS['impact'],
-        'factors'       => {}
-      }
+      selection = { 'factors' => {} }
+
+      INPUTS.each do |input|
+        selection[input[:id]] =
+          key_for(input[:options], issue_fields[input[:field]]) || DEFAULTS[input[:id]]
+      end
 
       FACTORS.each do |factor|
         score = issue_fields["AIVSS-SSVC.#{factor[:field]}"].to_s.strip[/\A[1-5]\z/]
