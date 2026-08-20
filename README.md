@@ -36,18 +36,18 @@ Restart your Dradis server and you should be good to go.
 
 | Input                                | Options (and value)                                            |
 | ------------------------------------ | -------------------------------------------------------------- |
-| P(Threat) — exploitation state       | None (0.2), Public PoC (0.5), Active (0.9)                      |
-| P(Vulnerability) — exploit success   | Hardened (0.3), Moderate (0.5), Exposed (0.8)                   |
-| Impact — systemic consequence        | Contained (2), Significant (5), Critical (10)                   |
+| P(Threat): exploitation state        | None (0.2), Public PoC (0.5), Active (0.9)                     |
+| P(Vulnerability): exploit success    | Hardened (0.3), Moderate (0.5), Exposed (0.8)                  |
+| Impact: systemic consequence         | Contained (2), Significant (5), Critical (10)                  |
 
 Exposure comes from ten capability factors, each scored 1–5 and grouped into
 three categories:
 
 | Category                        | Factors                                                                                   |
 | ------------------------------- | ----------------------------------------------------------------------------------------- |
-| A — Execution Power             | Execution Autonomy, Tool Authority Level, Code Execution Rights, Critical System Access     |
-| B — Environment & Adaptation    | Persistent Memory, Dynamic Identity & Permissions, Multi-Agent Coordination                 |
-| C — Predictability & Influence  | Self-Modification Capability, Non-Determinism Level, Deceptiveness Potential                |
+| A: Execution Power              | Execution Autonomy, Tool Authority Level, Code Execution Rights, Critical System Access    |
+| B: Environment & Adaptation     | Persistent Memory, Dynamic Identity & Permissions, Multi-Agent Coordination                |
+| C: Predictability & Influence   | Self-Modification Capability, Non-Determinism Level, Deceptiveness Potential               |
 
 The three category averages classify the agent, which sets the exposure
 multiplier:
@@ -62,22 +62,20 @@ The remediation outcome is then read off the 3×3×3 decision matrix
 
 ## Issue fields
 
-Scoring an issue writes the `AIVSS-SSVC.*` fields listed in
-`Dradis::Plugins::Calculators::AivssSsvc::V1::FIELDS` — the three inputs and
-their numeric values, the ten capability factors, the three category averages,
-the agent level and its exposure multiplier, the likelihood, the risk score,
-the outcome, its timeline, and the classification rationale.
+The `Dradis::Plugins::Calculators::AIVSSSSVC::V1::FIELDS` constant lists the
+`AIVSS-SSVC.*` fields written when an issue is scored. These fields include the
+three inputs and their numeric values, the ten capability factors, the three
+category averages, the agent level and its exposure multiplier, the likelihood,
+the risk score, the outcome, its timeline, and the classification rationale.
 
 There is no vector string in AIVSS-SSVC. When you re-open the calculator on an
-issue, the form is rebuilt from those individual fields; anything missing or
+issue, the form is rebuilt from those individual fields. Anything missing or
 unrecognised falls back to the default selection.
 
 ## Defaults
 
 Like the reference calculator, the form opens on the AIVSS-SSVC worked example
-(Public PoC / Moderate / Critical, with factors 4,4,4,4,3,3,3,2,3,2). Change
-`Dradis::Plugins::Calculators::AivssSsvc::V1::DEFAULTS` if you would rather
-start somewhere else.
+(Public PoC / Moderate / Critical, with factors 4,4,4,4,3,3,3,2,3,2).
 
 ## More information
 
