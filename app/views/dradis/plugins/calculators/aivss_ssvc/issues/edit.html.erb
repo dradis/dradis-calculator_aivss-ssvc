@@ -30,7 +30,12 @@
           live score in the Result pill. %>
       <%= simple_form_for [:aivss_ssvc, current_project, @issue], method: :patch do |f| %>
 
-        <div class="aivss-ssvc-calculator" data-behavior="aivss-ssvc-calc">
+        <div
+          class="aivss-ssvc-calculator"
+          data-behavior="aivss-ssvc-calc"
+          data-aivss-ssvc-config="<%= Dradis::Plugins::Calculators::AIVSSSSVC::V1::FRONTEND_CONFIG.to_json %>"
+          data-aivss-ssvc-fields-url="<%= calculators_aivss_ssvc_fields_path %>"
+        >
           <ul class="nav nav-pills w-100" id="aivss-ssvc-tabs">
             <li class="nav-item">
               <a href="#aivss-ssvc-edit-inputs" data-bs-toggle="pill" class="nav-link active">Inputs</a>

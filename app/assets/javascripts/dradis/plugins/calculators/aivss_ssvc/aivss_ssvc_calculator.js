@@ -2,40 +2,10 @@ document.addEventListener('turbo:load', () => {
   const root = document.querySelector('[data-behavior~=aivss-ssvc-calc]');
   if (!root) return;
 
-  // The three tables below are ported verbatim from the OWASP AIVSS-SSVC
-  // calculator (https://aivss.owasp.org/ssvc.html). Keep them in sync with that
-  // page: they are what makes Dradis and the web version agree on an outcome.
-  const OUTCOME_MATRIX = {
-    none: {
-      copilot:    { contained: 'Defer',        significant: 'Scheduled',    critical: 'Out-of-Cycle' },
-      specialist: { contained: 'Scheduled',    significant: 'Scheduled',    critical: 'Out-of-Cycle' },
-      primemover: { contained: 'Scheduled',    significant: 'Out-of-Cycle', critical: 'Immediate' }
-    },
-    poc: {
-      copilot:    { contained: 'Scheduled',    significant: 'Scheduled',    critical: 'Out-of-Cycle' },
-      specialist: { contained: 'Scheduled',    significant: 'Out-of-Cycle', critical: 'Out-of-Cycle' },
-      primemover: { contained: 'Out-of-Cycle', significant: 'Out-of-Cycle', critical: 'Immediate' }
-    },
-    active: {
-      copilot:    { contained: 'Out-of-Cycle', significant: 'Out-of-Cycle', critical: 'Immediate' },
-      specialist: { contained: 'Out-of-Cycle', significant: 'Immediate',    critical: 'Immediate' },
-      primemover: { contained: 'Immediate',    significant: 'Immediate',    critical: 'Immediate' }
-    }
-  };
-
-  const TIMELINE_BY_OUTCOME = {
-    'Defer':        'Timeline: no deadline. Monitor for changes.',
-    'Scheduled':    'Timeline: 30–90 days (standard remediation cycle).',
-    'Out-of-Cycle': 'Timeline: 7–30 days (accelerated remediation).',
-    'Immediate':    'Timeline: 0–7 days (highest urgency).'
-  };
-
-  const BADGE_CLASS = {
-    'Defer':        'aivss-ssvc-badge-defer',
-    'Scheduled':    'aivss-ssvc-badge-scheduled',
-    'Out-of-Cycle': 'aivss-ssvc-badge-out-of-cycle',
-    'Immediate':    'aivss-ssvc-badge-immediate'
-  };
+  const config = JSON.parse(root.dataset.aivssSsvcConfig);
+  const OUTCOME_MATRIX = config.outcomeMatrix;
+  const TIMELINE_BY_OUTCOME = config.timelineByOutcome;
+  const BADGE_CLASS = config.badgeClass;
 
   class AIVSSSSVCCalculator {
     constructor(root) {
@@ -49,6 +19,8 @@ document.addEventListener('turbo:load', () => {
       this.choices = Array.from(root.querySelectorAll('[data-behavior~=aivss-ssvc-choice]'));
       this.fieldSwitches = Array.from(root.querySelectorAll('[data-behavior~=aivss-ssvc-field-switch]'));
       this.result = root.querySelector('[data-behavior~=aivss-ssvc-result]');
+      this.fieldsUrl = root.dataset.aivssSsvcFieldsUrl;
+      this.fieldRequestId = 0;
       this.values = {};
     }
 
@@ -229,14 +201,30 @@ document.addEventListener('turbo:load', () => {
       this.setText('aivss-ssvc-timeline', TIMELINE_BY_OUTCOME[state.outcome] || '');
     }
 
-    writeResult() {
-      if (!this.result) return;
+    async writeResult() {
+      if (!this.result || !this.fieldsUrl) return;
 
       const fields = this.fieldSwitches.length
         ? this.fieldSwitches.filter((fieldSwitch) => fieldSwitch.checked).map((fieldSwitch) => fieldSwitch.dataset.fieldName)
         : Object.keys(this.values);
+      const requestId = ++this.fieldRequestId;
+      const csrfToken = document.querySelector('meta[name=csrf-token]')?.content;
 
-      this.result.value = fields.map((field) => `#[${field}]#\n${this.values[field]}`).join('\n\n');
+      const response = await fetch(this.fieldsUrl, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Accept': 'text/plain',
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+        },
+        body: JSON.stringify({ fields, values: this.values })
+      });
+
+      if (response.ok) {
+        const output = await response.text();
+        if (requestId === this.fieldRequestId) this.result.value = output;
+      }
     }
 
     writeFields(state) {

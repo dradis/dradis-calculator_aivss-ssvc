@@ -5,11 +5,7 @@ module Dradis::Plugins::Calculators::AIVSSSSVC
     skip_before_action :remove_unused_state_param
 
     def edit
-      @issue_fields = V1::FIELDS.map do |field|
-        value = @issue.fields[field]
-        value = 'N/A' if value.blank?
-        "#[#{field}]#\n#{value}"
-      end.join("\n\n")
+      @issue_fields = V1.field_output(@issue.fields)
     end
 
     def update
