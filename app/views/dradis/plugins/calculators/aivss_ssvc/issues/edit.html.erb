@@ -1,0 +1,99 @@
+<% content_for :title, 'Edit AIVSS-SSVC score' %>
+
+<% content_for :sidebar do %>
+  <%= render 'issues/sidebar' %>
+<% end %>
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <%= link_to current_project.name, main_app.project_path(current_project) %>
+  </li>
+  <li class="breadcrumb-item">
+    <%= link_to 'All issues', main_app.project_issues_path(current_project) %>
+  </li>
+  <li class="breadcrumb-item">
+    <%= link_to @issue.title? ? @issue.title : "Issue ##{@issue.id}", main_app.project_issue_path(current_project, @issue) %>
+  </li>
+  <li class="breadcrumb-item active">
+    AIVSS-SSVC Risk Scoring
+  </li>
+</ol>
+
+<div class="content-container">
+  <h4 class="header-underline">Edit AIVSS-SSVC Risk Scoring</h4>
+  <div id="issues_editor">
+    <div class="inner note-text-inner">
+
+      <%# This view renders between the main sidebar and the secondary issue
+          sidebar, so it does not have the width for the standalone page's
+          side-by-side layout. Tab it, the way CVSS and DREAD do, keeping the
+          live score in the Result pill. %>
+      <%= simple_form_for [:aivss_ssvc, current_project, @issue], method: :patch do |f| %>
+
+        <div
+          class="aivss-ssvc-calculator"
+          data-behavior="aivss-ssvc-calc"
+          data-aivss-ssvc-config="<%= Dradis::Plugins::Calculators::AIVSSSSVC::V1::FRONTEND_CONFIG.to_json %>"
+          data-aivss-ssvc-fields-url="<%= calculators_aivss_ssvc_fields_path %>"
+        >
+          <ul class="nav nav-pills w-100" id="aivss-ssvc-tabs">
+            <li class="nav-item">
+              <a href="#aivss-ssvc-edit-inputs" data-bs-toggle="pill" class="nav-link active">Inputs</a>
+            </li>
+            <li class="nav-item">
+              <a href="#aivss-ssvc-edit-factors" data-bs-toggle="pill" class="nav-link">Capability Factors</a>
+            </li>
+            <li class="nav-item pull-right">
+              <a href="#aivss-ssvc-edit-result" data-bs-toggle="pill" class="nav-link">
+                Result: <span data-behavior="aivss-ssvc-risk-score">0</span>
+                (<span data-behavior="aivss-ssvc-outcome-text">-</span>)
+              </a>
+            </li>
+          </ul>
+
+          <div class="tab-content mt-4">
+            <div class="tab-pane active" id="aivss-ssvc-edit-inputs">
+              <%= render 'dradis/plugins/calculators/aivss_ssvc/base/inputs' %>
+            </div>
+            <div class="tab-pane" id="aivss-ssvc-edit-factors">
+              <%= render 'dradis/plugins/calculators/aivss_ssvc/base/factors' %>
+            </div>
+            <div class="tab-pane" id="aivss-ssvc-edit-result">
+              <p>Toggle the fields you'd like to include in the issue content. Defaults can be set in the <%= link_to 'Configuration Manager', main_app.project_configurations_path %>.</p>
+              <div class="mb-2">
+                <a href="javascript:void(0)" data-behavior="aivss-ssvc-select-all">Select all</a>
+                - <a href="javascript:void(0)" data-behavior="aivss-ssvc-select-none">Deselect all</a>
+              </div>
+
+              <% @aivss_ssvc_field_groups.each do |group_name, fields| %>
+                <div class="mb-3">
+                  <h6 class="mb-2"><%= group_name %></h6>
+                  <% fields.each do |field| %>
+                    <div class="form-check form-switch mb-2">
+                      <input class="form-check-input"
+                             type="checkbox"
+                             role="switch"
+                             id="aivss-ssvc-field-<%= field.parameterize %>"
+                             data-behavior="aivss-ssvc-field-switch"
+                             data-field-name="<%= field %>"
+                             <%= 'checked' if @enabled_fields.include?(field) %>>
+                      <label class="form-check-label" for="aivss-ssvc-field-<%= field.parameterize %>"><%= field %></label>
+                      <p class="small mb-0" data-behavior="aivss-ssvc-field-value" data-field-name="<%= field %>"></p>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+
+              <%= text_area_tag :aivss_ssvc_fields, @issue_fields, class: 'd-none', data: { behavior: 'aivss-ssvc-result' } %>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <%= f.button :submit, nil, class: 'btn btn-primary' %> or
+          <%= link_to 'Cancel', main_app.project_issue_path(current_project, @issue), class: 'cancel-link' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
