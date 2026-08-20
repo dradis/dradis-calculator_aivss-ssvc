@@ -1,9 +1,14 @@
 require 'dradis-plugins'
 
+ActiveSupport::Inflector.inflections do |inflect|
+  inflect.acronym('AIVSS')
+  inflect.acronym('SSVC')
+end
+
 module Dradis
   module Plugins
     module Calculators
-      module AivssSsvc
+      module AIVSSSSVC
       end
     end
   end

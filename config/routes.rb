@@ -1,4 +1,4 @@
-Dradis::Plugins::Calculators::AivssSsvc::Engine.routes.draw do
+Dradis::Plugins::Calculators::AIVSSSSVC::Engine.routes.draw do
   get '/calculators/aivss_ssvc' => 'base#index'
 
   resources :projects, only: [] do

@@ -37,7 +37,7 @@ document.addEventListener('turbo:load', () => {
     'Immediate':    'aivss-ssvc-badge-immediate'
   };
 
-  class AivssSsvcCalculator {
+  class AIVSSSSVCCalculator {
     constructor(root) {
       this.root = root;
       this.inputs = {};
@@ -47,7 +47,9 @@ document.addEventListener('turbo:load', () => {
 
       this.factors = Array.from(root.querySelectorAll('[data-behavior~=aivss-ssvc-factor]'));
       this.choices = Array.from(root.querySelectorAll('[data-behavior~=aivss-ssvc-choice]'));
+      this.fieldSwitches = Array.from(root.querySelectorAll('[data-behavior~=aivss-ssvc-field-switch]'));
       this.result = root.querySelector('[data-behavior~=aivss-ssvc-result]');
+      this.values = {};
     }
 
     init() {
@@ -57,7 +59,27 @@ document.addEventListener('turbo:load', () => {
           this.calculate();
         });
       });
+
+      this.fieldSwitches.forEach((fieldSwitch) => {
+        fieldSwitch.addEventListener('change', () => this.writeResult());
+      });
+
+      this.bindFieldSelection('aivss-ssvc-select-all', true);
+      this.bindFieldSelection('aivss-ssvc-select-none', false);
       this.calculate();
+    }
+
+    bindFieldSelection(behavior, checked) {
+      const control = this.root.querySelector(`[data-behavior~=${behavior}]`);
+      if (!control) return;
+
+      control.addEventListener('click', (event) => {
+        event.preventDefault();
+        this.fieldSwitches.forEach((fieldSwitch) => {
+          fieldSwitch.checked = checked;
+        });
+        this.writeResult();
+      });
     }
 
     // ------------------------------------------------ ported from the web app
@@ -207,16 +229,14 @@ document.addEventListener('turbo:load', () => {
       this.setText('aivss-ssvc-timeline', TIMELINE_BY_OUTCOME[state.outcome] || '');
     }
 
-    escapeRegex(string) {
-      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    }
+    writeResult() {
+      if (!this.result) return;
 
-    // Patches one value into the server-rendered #[Field]# skeleton, the way the
-    // MITRE calculator does. The field list and its order stay in Ruby
-    // (V1::FIELDS) and are never restated here.
-    updateResult(field, value) {
-      const regex = new RegExp(`(#\\[${this.escapeRegex(field)}\\]#\\n)(.*?)(\\n|$)`, 'g');
-      this.result.value = this.result.value.replace(regex, (_m, before, _old, after) => `${before}${value}${after}`);
+      const fields = this.fieldSwitches.length
+        ? this.fieldSwitches.filter((fieldSwitch) => fieldSwitch.checked).map((fieldSwitch) => fieldSwitch.dataset.fieldName)
+        : Object.keys(this.values);
+
+      this.result.value = fields.map((field) => `#[${field}]#\n${this.values[field]}`).join('\n\n');
     }
 
     writeFields(state) {
@@ -246,9 +266,15 @@ document.addEventListener('turbo:load', () => {
       values['AIVSS-SSVC.Timeline'] = TIMELINE_BY_OUTCOME[state.outcome];
       values['AIVSS-SSVC.Rationale'] = state.agent.rationale;
 
-      Object.entries(values).forEach(([field, value]) => this.updateResult(field, value));
+      this.values = values;
+
+      this.root.querySelectorAll('[data-behavior~=aivss-ssvc-field-value]').forEach((element) => {
+        element.textContent = values[element.dataset.fieldName];
+      });
+
+      this.writeResult();
     }
   }
 
-  new AivssSsvcCalculator(root).init();
+  new AIVSSSSVCCalculator(root).init();
 });

@@ -54,7 +54,32 @@
               <%= render 'dradis/plugins/calculators/aivss_ssvc/base/factors' %>
             </div>
             <div class="tab-pane" id="aivss-ssvc-edit-result">
-              <%= render 'dradis/plugins/calculators/aivss_ssvc/base/results' %>
+              <p>Toggle the fields you'd like to include in the issue content. Defaults can be set in the <%= link_to 'Configuration Manager', main_app.project_configurations_path %>.</p>
+              <div class="mb-2">
+                <a href="javascript:void(0)" data-behavior="aivss-ssvc-select-all">Select all</a>
+                - <a href="javascript:void(0)" data-behavior="aivss-ssvc-select-none">Deselect all</a>
+              </div>
+
+              <% @aivss_ssvc_field_groups.each do |group_name, fields| %>
+                <div class="mb-3">
+                  <h6 class="mb-2"><%= group_name %></h6>
+                  <% fields.each do |field| %>
+                    <div class="form-check form-switch mb-2">
+                      <input class="form-check-input"
+                             type="checkbox"
+                             role="switch"
+                             id="aivss-ssvc-field-<%= field.parameterize %>"
+                             data-behavior="aivss-ssvc-field-switch"
+                             data-field-name="<%= field %>"
+                             <%= 'checked' if @enabled_fields.include?(field) %>>
+                      <label class="form-check-label" for="aivss-ssvc-field-<%= field.parameterize %>"><%= field %></label>
+                      <p class="small mb-0" data-behavior="aivss-ssvc-field-value" data-field-name="<%= field %>"></p>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+
+              <%= text_area_tag :aivss_ssvc_fields, @issue_fields, class: 'd-none', data: { behavior: 'aivss-ssvc-result' } %>
             </div>
           </div>
         </div>

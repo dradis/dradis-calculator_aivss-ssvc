@@ -1,4 +1,4 @@
-module Dradis::Plugins::Calculators::AivssSsvc
+module Dradis::Plugins::Calculators::AIVSSSSVC
   class BaseController < ActionController::Base
     def index
       @aivss_ssvc_selection = V1::DEFAULTS

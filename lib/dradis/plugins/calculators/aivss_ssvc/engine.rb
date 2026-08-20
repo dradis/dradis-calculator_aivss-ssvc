@@ -1,10 +1,21 @@
-module Dradis::Plugins::Calculators::AivssSsvc
+module Dradis::Plugins::Calculators::AIVSSSSVC
   class Engine < ::Rails::Engine
-    isolate_namespace Dradis::Plugins::Calculators::AivssSsvc
+    isolate_namespace Dradis::Plugins::Calculators::AIVSSSSVC
 
     include Dradis::Plugins::Base
     provides :addon
     description 'Risk Calculators: AIVSS-SSVC'
+
+    addon_settings :aivss_ssvc do
+      settings.default_fields = 'AIVSS-SSVC.Likelihood,AIVSS-SSVC.RiskScore,AIVSS-SSVC.AgentLevel'
+    end
+
+    initializer 'calculator_aivss_ssvc.inflections' do
+      ActiveSupport::Inflector.inflections do |inflect|
+        inflect.acronym('AIVSS')
+        inflect.acronym('SSVC')
+      end
+    end
 
     initializer 'calculator_aivss_ssvc.asset_precompile_paths' do |app|
       app.config.assets.precompile += [

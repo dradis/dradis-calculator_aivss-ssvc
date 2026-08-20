@@ -6,7 +6,7 @@ require 'dradis/plugins/calculators/aivss_ssvc/version'
 Gem::Specification.new do |spec|
   spec.platform = Gem::Platform::RUBY
   spec.name = 'dradis-calculator_aivss-ssvc'
-  spec.version = Dradis::Plugins::Calculators::AivssSsvc::VERSION::STRING
+  spec.version = Dradis::Plugins::Calculators::AIVSSSSVC::VERSION::STRING
   spec.summary = 'This plugin adds an AIVSS-SSVC score calculator to Dradis.'
   spec.description = 'Display an OWASP AIVSS-SSVC calculator in Dradis Framework.'
 

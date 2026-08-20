@@ -1,4 +1,4 @@
-module Dradis::Plugins::Calculators::AivssSsvc
+module Dradis::Plugins::Calculators::AIVSSSSVC
   # Definitions for the OWASP AIVSS-SSVC calculator.
   #
   # Every constant below (probabilities, impact values, capability factors and
