@@ -24,7 +24,7 @@ document.addEventListener('turbo:load', () => {
   };
 
   const TIMELINE_BY_OUTCOME = {
-    'Defer':        'Timeline: no deadline; monitor for changes.',
+    'Defer':        'Timeline: no deadline. Monitor for changes.',
     'Scheduled':    'Timeline: 30–90 days (standard remediation cycle).',
     'Out-of-Cycle': 'Timeline: 7–30 days (accelerated remediation).',
     'Immediate':    'Timeline: 0–7 days (highest urgency).'
@@ -46,13 +46,16 @@ document.addEventListener('turbo:load', () => {
       });
 
       this.factors = Array.from(root.querySelectorAll('[data-behavior~=aivss-ssvc-factor]'));
+      this.choices = Array.from(root.querySelectorAll('[data-behavior~=aivss-ssvc-choice]'));
       this.result = root.querySelector('[data-behavior~=aivss-ssvc-result]');
     }
 
     init() {
-      const selects = Object.values(this.inputs).concat(this.factors);
-      selects.forEach((select) => {
-        select.addEventListener('change', () => this.calculate());
+      this.choices.forEach((choice) => {
+        choice.addEventListener('click', () => {
+          this.selectChoice(choice);
+          this.calculate();
+        });
       });
       this.calculate();
     }
@@ -94,12 +97,12 @@ document.addEventListener('turbo:load', () => {
       if (strongest >= 3.0) {
         return {
           key: 'specialist', label: 'Specialist', exposure: 4,
-          rationale: 'Mixed profile with a strongest category average ≥ 3.0; selecting the higher classification.'
+          rationale: 'The mixed profile has a strongest category average ≥ 3.0. The higher classification applies.'
         };
       }
       return {
         key: 'copilot', label: 'Copilot', exposure: 2,
-        rationale: 'Mixed profile but strongest category average < 3.0; defaulting to Copilot.'
+        rationale: 'The mixed profile has a strongest category average < 3.0. The Copilot classification applies.'
       };
     }
 
@@ -108,15 +111,28 @@ document.addEventListener('turbo:load', () => {
     }
     // ----------------------------------------------- /ported from the web app
 
-    selectedOption(select) {
-      return select.options[select.selectedIndex];
+    selectChoice(choice) {
+      const target = this.root.querySelector(`#${choice.dataset.selectTarget}`);
+      if (!target) return;
+
+      this.root.querySelectorAll(`[data-select-target="${choice.dataset.selectTarget}"]`).forEach((button) => {
+        button.classList.remove('active', 'btn-primary');
+        button.setAttribute('aria-pressed', 'false');
+      });
+      choice.classList.add('active', 'btn-primary');
+      choice.setAttribute('aria-pressed', 'true');
+      target.value = choice.value;
+    }
+
+    selectedOption(input) {
+      return this.root.querySelector(`[data-select-target="${input.id}"].active`);
     }
 
     categoryAverage(category) {
       const scores = this.factors
-        .filter((select) => select.dataset.category === category)
-        .map((select) => {
-          const value = Number(select.value);
+        .filter((factor) => factor.dataset.category === category)
+        .map((factor) => {
+          const value = Number(factor.value);
           return Number.isFinite(value) ? value : 1;
         });
 
@@ -183,8 +199,8 @@ document.addEventListener('turbo:load', () => {
 
       this.setText(
         'aivss-ssvc-rationale',
-        `Decision inputs: Threat=${state.threatOption.text}, Agent=${state.agent.label} (${state.agent.exposure}×), ` +
-        `Impact=${state.impactOption.text}. Classification rationale: ${state.agent.rationale}`
+        `Decision inputs: Threat=${state.threatOption.textContent.trim()}, Agent=${state.agent.label} (${state.agent.exposure}×), ` +
+        `Impact=${state.impactOption.textContent.trim()}. Classification rationale: ${state.agent.rationale}`
       );
 
       this.setText('aivss-ssvc-outcome-text', state.outcome);
@@ -215,8 +231,8 @@ document.addEventListener('turbo:load', () => {
       values[this.inputs.impact.dataset.field] = state.impactOption.dataset.label;
       values[this.inputs.impact.dataset.valueField] = state.impactValue;
 
-      this.factors.forEach((select) => {
-        values[select.dataset.field] = select.value;
+      this.factors.forEach((factor) => {
+        values[factor.dataset.field] = factor.value;
       });
 
       values['AIVSS-SSVC.CategoryA'] = this.round2(state.aAvg);

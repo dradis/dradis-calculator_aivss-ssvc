@@ -1,44 +1,41 @@
 <div class="aivss-ssvc-results">
-  <h3 class="aivss-ssvc-section-title">Results</h3>
+  <h3 class="aivss-ssvc-section-title">Result</h3>
+
+  <div class="aivss-ssvc-score-display">
+    <span class="aivss-ssvc-score" data-behavior="aivss-ssvc-risk-score">-</span>
+    <span class="aivss-ssvc-badge" data-behavior="aivss-ssvc-outcome">-</span>
+  </div>
+  <p class="aivss-ssvc-score-formula" data-behavior="aivss-ssvc-risk-mini">Likelihood &times; Exposure &times; Impact</p>
 
   <div class="aivss-ssvc-kpis">
     <div class="aivss-ssvc-kpi">
-      <p class="aivss-ssvc-kpi-name">Likelihood</p>
-      <p class="aivss-ssvc-kpi-value" data-behavior="aivss-ssvc-likelihood">&mdash;</p>
-      <p class="aivss-ssvc-kpi-mini" data-behavior="aivss-ssvc-likelihood-mini">P(Threat) &times; P(Vulnerability)</p>
+      <p class="aivss-ssvc-result-label">Likelihood</p>
+      <p class="aivss-ssvc-kpi-value" data-behavior="aivss-ssvc-likelihood">-</p>
+      <p class="aivss-ssvc-result-text" data-behavior="aivss-ssvc-likelihood-mini">P(Threat) &times; P(Vulnerability)</p>
     </div>
 
     <div class="aivss-ssvc-kpi">
-      <p class="aivss-ssvc-kpi-name">Risk Score</p>
-      <p class="aivss-ssvc-kpi-value" data-behavior="aivss-ssvc-risk-score">&mdash;</p>
-      <p class="aivss-ssvc-kpi-mini" data-behavior="aivss-ssvc-risk-mini">Likelihood &times; Exposure &times; Impact</p>
+      <p class="aivss-ssvc-result-label">Agent Level</p>
+      <p class="aivss-ssvc-kpi-value" data-behavior="aivss-ssvc-agent-level">-</p>
+      <p class="aivss-ssvc-result-text" data-behavior="aivss-ssvc-agent-mini">Exposure multiplier</p>
     </div>
 
     <div class="aivss-ssvc-kpi">
-      <p class="aivss-ssvc-kpi-name">Agent Level</p>
-      <p class="aivss-ssvc-kpi-value" data-behavior="aivss-ssvc-agent-level">&mdash;</p>
-      <p class="aivss-ssvc-kpi-mini" data-behavior="aivss-ssvc-agent-mini">Exposure multiplier</p>
-    </div>
-
-    <div class="aivss-ssvc-kpi">
-      <p class="aivss-ssvc-kpi-name">Category A / B / C Averages</p>
-      <p class="aivss-ssvc-kpi-value" data-behavior="aivss-ssvc-averages">&mdash;</p>
-      <p class="aivss-ssvc-kpi-mini">Execution / Environment / Predictability</p>
+      <p class="aivss-ssvc-result-label">Category A / B / C Averages</p>
+      <p class="aivss-ssvc-kpi-value" data-behavior="aivss-ssvc-averages">-</p>
+      <p class="aivss-ssvc-result-text">Execution / Environment / Predictability</p>
     </div>
   </div>
 
   <div class="aivss-ssvc-outcome" aria-live="polite">
-    <p class="aivss-ssvc-outcome-title">Remediation Outcome</p>
-    <span class="aivss-ssvc-badge" data-behavior="aivss-ssvc-outcome">&mdash;</span>
-    <p class="aivss-ssvc-subtle" data-behavior="aivss-ssvc-rationale">&mdash;</p>
-    <p class="aivss-ssvc-subtle" data-behavior="aivss-ssvc-timeline">&mdash;</p>
+    <p class="aivss-ssvc-result-label">Classification</p>
+    <p class="aivss-ssvc-result-text" data-behavior="aivss-ssvc-rationale">-</p>
+    <p class="aivss-ssvc-result-text" data-behavior="aivss-ssvc-timeline">-</p>
   </div>
 
   <div class="aivss-ssvc-output">
-    <label class="form-label" for="aivss_ssvc_fields">
-      Dradis field output
-      <span class="aivss-ssvc-help d-block">The score supports prioritization and tracking. The outcome is selected by the decision matrix using threat level, agent level, and systemic impact.</span>
-    </label>
+    <label class="aivss-ssvc-result-label" for="aivss_ssvc_fields">Dradis field output</label>
+    <p class="aivss-ssvc-result-text">The score supports prioritization and tracking. The outcome is selected by the decision matrix using threat level, agent level, and systemic impact.</p>
     <%= text_area_tag :aivss_ssvc_fields, @issue_fields, rows: 22, class: 'form-control aivss-ssvc-output-textarea', data: { behavior: 'aivss-ssvc-result' } %>
   </div>
 </div>

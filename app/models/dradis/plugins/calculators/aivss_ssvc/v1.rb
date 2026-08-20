@@ -10,21 +10,21 @@ module Dradis::Plugins::Calculators::AivssSsvc
   # evaluates it in the browser.
   class V1
     THREAT_LEVELS = [
-      { key: 'none',   label: 'None',       value: 0.2 },
-      { key: 'poc',    label: 'Public PoC', value: 0.5 },
-      { key: 'active', label: 'Active',     value: 0.9 }
+      { key: 'none',   label: 'None',       value: 0.2, description: 'No evidence of exploitation or public proof of concept.' },
+      { key: 'poc',    label: 'Public PoC', value: 0.5, description: 'A public proof of concept or known exploitation method exists.' },
+      { key: 'active', label: 'Active',     value: 0.9, description: 'Reliable exploitation occurs in the wild.' }
     ].freeze
 
     VULNERABILITY_POSTURES = [
-      { key: 'hardened', label: 'Hardened', value: 0.3 },
-      { key: 'moderate', label: 'Moderate', value: 0.5 },
-      { key: 'exposed',  label: 'Exposed',  value: 0.8 }
+      { key: 'hardened', label: 'Hardened', value: 0.3, description: 'Strong controls make successful exploitation less likely.' },
+      { key: 'moderate', label: 'Moderate', value: 0.5, description: 'Some controls limit exploitation, but meaningful exposure remains.' },
+      { key: 'exposed',  label: 'Exposed',  value: 0.8, description: 'Limited controls make successful exploitation more likely.' }
     ].freeze
 
     IMPACT_LEVELS = [
-      { key: 'contained',   label: 'Contained',   value: 2 },
-      { key: 'significant', label: 'Significant', value: 5 },
-      { key: 'critical',    label: 'Critical',    value: 10 }
+      { key: 'contained',   label: 'Contained',   value: 2,  description: 'The effect has a limited blast radius.' },
+      { key: 'significant', label: 'Significant', value: 5,  description: 'The effect disrupts a major business function.' },
+      { key: 'critical',    label: 'Critical',    value: 10, description: 'The effect threatens safety or the organization.' }
     ].freeze
 
     INPUTS = [
@@ -32,32 +32,29 @@ module Dradis::Plugins::Calculators::AivssSsvc
         id: 'threat',
         field: 'AIVSS-SSVC.Threat',
         value_field: 'AIVSS-SSVC.Threat.Value',
-        label: 'P(Threat) — exploitation state',
-        help: 'None: no evidence and no public PoC. Public PoC: known method exists. Active: reliable in-the-wild exploitation.',
+        label: 'P(Threat): exploitation state',
         options: THREAT_LEVELS
       },
       {
         id: 'vulnerability',
         field: 'AIVSS-SSVC.Vulnerability',
         value_field: 'AIVSS-SSVC.Vulnerability.Value',
-        label: 'P(Vulnerability) — exploit success probability',
-        help: 'Maps your control posture across the ten agent weakness categories to a probability for exploit success.',
+        label: 'P(Vulnerability): exploit success probability',
         options: VULNERABILITY_POSTURES
       },
       {
         id: 'impact',
         field: 'AIVSS-SSVC.Impact',
         value_field: 'AIVSS-SSVC.Impact.Value',
-        label: 'Impact — systemic consequence',
-        help: 'Contained: limited blast radius. Significant: major business function disruption. Critical: existential or safety-critical.',
+        label: 'Impact: systemic consequence',
         options: IMPACT_LEVELS
       }
     ].freeze
 
     CATEGORIES = {
-      'A' => 'A — Execution Power',
-      'B' => 'B — Environment & Adaptation',
-      'C' => 'C — Predictability & Influence'
+      'A' => 'A: Execution Power',
+      'B' => 'B: Environment & Adaptation',
+      'C' => 'C: Predictability & Influence'
     }.freeze
 
     FACTORS = [

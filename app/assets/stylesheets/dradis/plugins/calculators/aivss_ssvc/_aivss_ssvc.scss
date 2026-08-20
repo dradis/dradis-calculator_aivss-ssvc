@@ -1,11 +1,24 @@
+.aivss-ssvc-calculator {
+  padding-bottom: 2rem;
+}
+
 .aivss-ssvc-group {
-  margin-bottom: 2rem;
+  margin-bottom: 0;
 }
 
 .aivss-ssvc-section-title {
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.aivss-ssvc-group-title {
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.875em;
+  letter-spacing: 0.04em;
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.5rem;
+  text-transform: uppercase;
 }
 
 .aivss-ssvc-hint,
@@ -17,125 +30,198 @@
 
 .aivss-ssvc-field {
   margin-bottom: 1.5rem;
+}
 
-  .aivss-ssvc-label {
-    font-weight: 600;
-    margin-bottom: 0.125rem;
-  }
+.aivss-ssvc-group > .aivss-ssvc-field:last-child {
+  margin-bottom: 0;
+}
 
-  .aivss-ssvc-help {
-    margin-bottom: 0.5rem;
+.aivss-ssvc-label,
+.aivss-ssvc-factor-name {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.aivss-ssvc-label i,
+.aivss-ssvc-factor-name i {
+  color: var(--text-muted);
+  cursor: help;
+  margin-left: 0.25rem;
+}
+
+.aivss-ssvc-btn-group.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+
+  > .btn {
+    border-radius: 2rem !important;
+    flex: none;
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin-left: 0;
+    padding: 0.3rem 0.75rem;
+    white-space: nowrap;
+
+    &:not(.active) {
+      background: var(--secondary-bg);
+      color: var(--text-muted);
+
+      &:hover {
+        background: $brand-100;
+        color: $primary;
+      }
+    }
+
+    &.active {
+      background: $primary;
+      border: 1px solid $primary;
+      box-shadow: 0.125rem 0.125rem 0.5rem 0 rgba($shadow-color-dark, 0.1);
+      color: $white;
+    }
   }
 }
 
-.aivss-ssvc-factors {
-  td {
-    vertical-align: middle;
-  }
+.aivss-ssvc-standalone .aivss-ssvc-metric-group {
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  margin-bottom: 1.25rem;
+  padding: 1.5rem;
+}
 
-  .aivss-ssvc-factor-name {
-    display: block;
-    font-weight: 600;
-  }
-
-  .aivss-ssvc-factor-desc,
-  .aivss-ssvc-factor-category {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-  }
+.aivss-ssvc-results-panel {
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  box-shadow: 0.125rem 0.125rem 0.5rem 0 rgba($shadow-color-dark, 0.1);
+  padding: 1.5rem;
+  position: sticky;
+  top: 1.5rem;
 }
 
 .aivss-ssvc-results {
-  background-color: var(--primary-bg-subtle);
-  border: 1px solid var(--border-color);
-  border-radius: $border-radius;
-  padding: 1.25rem;
-  position: sticky;
-  top: 1rem;
+  min-width: 0;
+}
+
+.aivss-ssvc-score-display {
+  align-items: center;
+  display: flex;
+  margin-bottom: 0.25rem;
+}
+
+.aivss-ssvc-score {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-right: 0.75rem;
 }
 
 .aivss-ssvc-kpis {
-  display: grid;
-  gap: 0.75rem;
-  // 2-up in the narrow results column on the standalone page, 4-up in the
-  // full-width Result tab on the issue view.
-  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
   margin-bottom: 1.25rem;
 }
 
 .aivss-ssvc-kpi {
-  background-color: var(--primary-bg);
-  border: 1px solid var(--border-color);
-  border-radius: $border-radius;
-  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
 
-  .aivss-ssvc-kpi-name {
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    margin-bottom: 0.25rem;
-    text-transform: uppercase;
-  }
+.aivss-ssvc-result-label {
+  display: block;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.375rem;
+  text-transform: uppercase;
+}
 
-  .aivss-ssvc-kpi-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 0.25rem;
-  }
+.aivss-ssvc-kpi-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
 
-  .aivss-ssvc-kpi-mini {
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    margin-bottom: 0;
-  }
+.aivss-ssvc-result-text {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 0;
+}
+
+.aivss-ssvc-score-formula {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 1.5rem;
 }
 
 .aivss-ssvc-outcome {
-  background-color: var(--primary-bg);
-  border: 1px solid var(--border-color);
-  border-radius: $border-radius;
   margin-bottom: 1.25rem;
-  padding: 0.75rem;
+}
 
-  .aivss-ssvc-outcome-title {
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-  }
-
-  .aivss-ssvc-subtle {
-    color: var(--text-muted);
-    font-size: 0.8rem;
-    margin: 0.75rem 0 0;
-  }
+.aivss-ssvc-result-text + .aivss-ssvc-result-text {
+  margin-top: 0.75rem;
 }
 
 .aivss-ssvc-badge {
+  border: 1px solid transparent;
   border-radius: 2rem;
-  color: $grey-900;
   display: inline-block;
-  font-weight: 700;
-  padding: 0.35rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.875rem;
+}
 
-  &.aivss-ssvc-badge-defer {
-    background-color: $green-200;
-  }
+.aivss-ssvc-badge-defer {
+  background: $green-100;
+  border-color: $green-700;
+  color: $green-700;
+}
 
-  &.aivss-ssvc-badge-scheduled {
-    background-color: $yellow-200;
-  }
+.aivss-ssvc-badge-scheduled {
+  background: $yellow-100;
+  border-color: $yellow-700;
+  color: $yellow-700;
+}
 
-  &.aivss-ssvc-badge-out-of-cycle {
-    background-color: $orange-200;
-  }
+.aivss-ssvc-badge-out-of-cycle {
+  background: $orange-100;
+  border-color: $orange-700;
+  color: $orange-700;
+}
 
-  &.aivss-ssvc-badge-immediate {
-    background-color: $red-200;
-  }
+.aivss-ssvc-badge-immediate {
+  background: $red-100;
+  border-color: $red-600;
+  color: $red-600;
+}
+
+.aivss-ssvc-output .aivss-ssvc-result-text {
+  margin-bottom: 0.375rem;
 }
 
 .aivss-ssvc-output-textarea {
-  font-family: var(--bs-font-monospace);
-  font-size: 0.8rem;
+  background: var(--secondary-bg) !important;
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  color: var(--text-muted);
+  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.aivss-ssvc-output-textarea:focus {
+  border-color: $primary;
+  box-shadow: 0 0 0 0.2rem rgba($primary, 0.15);
+}
+
+@media (max-width: 991px) {
+  .aivss-ssvc-results-panel {
+    box-shadow: none;
+    position: static;
+  }
+
+  .aivss-ssvc-score {
+    font-size: 2.25rem;
+  }
+
+  .aivss-ssvc-btn-group.btn-group > .btn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.625rem;
+  }
 }

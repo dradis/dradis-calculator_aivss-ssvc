@@ -2,39 +2,35 @@
 
 <section class="aivss-ssvc-group">
   <h3 class="aivss-ssvc-section-title">Exposure: 10 Capability Factors (1–5)</h3>
-  <p class="aivss-ssvc-hint">Category A averages factors 1–4, Category B averages factors 5–7, and Category C averages factors 8–10. Mixed-score rules classify Copilot (2&times;), Specialist (4&times;), or Prime Mover (8&times;).</p>
+  <p class="aivss-ssvc-hint">Score each factor from 1 to 5. Category averages determine Copilot, Specialist, or Prime Mover.</p>
 
-  <table class="table table-striped aivss-ssvc-factors">
-    <thead>
-      <tr>
-        <th style="width: 56%;">Factor</th>
-        <th style="width: 24%;">Category</th>
-        <th style="width: 20%;">Score</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% v1::FACTORS.each do |factor| %>
-        <tr>
-          <td>
-            <label class="aivss-ssvc-factor-name" for="aivss-ssvc-<%= factor[:id] %>"><%= factor[:name] %></label>
-            <span class="aivss-ssvc-factor-desc"><%= factor[:description] %></span>
-          </td>
-          <td class="aivss-ssvc-factor-category"><%= v1::CATEGORIES[factor[:category]] %></td>
-          <td>
-            <select
-              id="aivss-ssvc-<%= factor[:id] %>"
-              class="form-select"
-              data-behavior="aivss-ssvc-factor"
-              data-category="<%= factor[:category] %>"
-              data-field="AIVSS-SSVC.<%= factor[:field] %>"
-              data-combobox-config="no-combobox">
-              <% (1..5).each do |score| %>
-                <option value="<%= score %>" <%= 'selected' if @aivss_ssvc_selection['factors'][factor[:id]] == score %>><%= score %></option>
-              <% end %>
-            </select>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <% v1::CATEGORIES.each do |category, category_label| %>
+    <h5 class="aivss-ssvc-group-title"><%= category_label %></h5>
+    <% v1::FACTORS.select { |factor| factor[:category] == category }.each do |factor| %>
+      <div class="aivss-ssvc-field">
+        <span id="aivss-ssvc-<%= factor[:id] %>-label" class="aivss-ssvc-factor-name" title="<%= factor[:description] %>">
+          <%= factor[:name] %>
+          <i class="fa-regular fa-question-circle small" aria-hidden="true"></i>
+        </span>
+        <%= hidden_field_tag factor[:id], @aivss_ssvc_selection['factors'][factor[:id]],
+              id: "aivss-ssvc-#{factor[:id]}",
+              data: {
+                behavior: 'aivss-ssvc-factor',
+                category: factor[:category],
+                field: "AIVSS-SSVC.#{factor[:field]}"
+              } %>
+        <div class="aivss-ssvc-btn-group btn-group" role="group" aria-labelledby="aivss-ssvc-<%= factor[:id] %>-label">
+          <% (1..5).each do |score| %>
+            <button
+              type="button"
+              class="btn <%= 'active btn-primary' if @aivss_ssvc_selection['factors'][factor[:id]] == score %>"
+              aria-pressed="<%= @aivss_ssvc_selection['factors'][factor[:id]] == score %>"
+              value="<%= score %>"
+              data-behavior="aivss-ssvc-choice"
+              data-select-target="aivss-ssvc-<%= factor[:id] %>"><%= score %></button>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
 </section>

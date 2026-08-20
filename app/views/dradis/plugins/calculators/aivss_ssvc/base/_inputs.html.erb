@@ -2,28 +2,35 @@
 
 <section class="aivss-ssvc-group">
   <h3 class="aivss-ssvc-section-title">Inputs</h3>
-  <p class="aivss-ssvc-hint">Set exploitation state, vulnerability posture, and systemic impact, then score the ten capability factors. The calculator computes category averages, classifies the agent level, calculates the numeric score, and maps the qualitative triple to the SSVC outcome.</p>
+  <p class="aivss-ssvc-section-hint">
+    Set the threat, vulnerability, and impact. Then score all ten capability factors. The calculator uses these values to set the agent level, risk score, and SSVC outcome.
+  </p>
 
   <% v1::INPUTS.each do |input| %>
     <div class="aivss-ssvc-field">
-      <label class="form-label aivss-ssvc-label" for="aivss-ssvc-<%= input[:id] %>"><%= input[:label] %></label>
-      <p class="aivss-ssvc-help"><%= input[:help] %></p>
-      <select
-        id="aivss-ssvc-<%= input[:id] %>"
-        class="form-select"
-        data-behavior="aivss-ssvc-input"
-        data-input="<%= input[:id] %>"
-        data-field="<%= input[:field] %>"
-        data-value-field="<%= input[:value_field] %>"
-        data-combobox-config="no-combobox">
+      <span id="aivss-ssvc-<%= input[:id] %>-label" class="aivss-ssvc-label"><%= input[:label] %></span>
+      <%= hidden_field_tag input[:id], @aivss_ssvc_selection[input[:id]],
+            id: "aivss-ssvc-#{input[:id]}",
+            data: {
+              behavior: 'aivss-ssvc-input',
+              field: input[:field],
+              input: input[:id],
+              value_field: input[:value_field]
+            } %>
+      <div class="aivss-ssvc-btn-group btn-group" role="group" aria-labelledby="aivss-ssvc-<%= input[:id] %>-label">
         <% input[:options].each do |option| %>
-          <option
+          <button
+            type="button"
+            class="btn <%= 'active btn-primary' if @aivss_ssvc_selection[input[:id]] == option[:key] %>"
+            title="<%= option[:description] %>"
+            aria-pressed="<%= @aivss_ssvc_selection[input[:id]] == option[:key] %>"
             value="<%= option[:key] %>"
+            data-behavior="aivss-ssvc-choice"
+            data-select-target="aivss-ssvc-<%= input[:id] %>"
             data-score="<%= option[:value] %>"
-            data-label="<%= option[:label] %>"
-            <%= 'selected' if @aivss_ssvc_selection[input[:id]] == option[:key] %>><%= "#{option[:label]} (#{option[:value]})" %></option>
+            data-label="<%= option[:label] %>"><%= "#{option[:label]} (#{option[:value]})" %></button>
         <% end %>
-      </select>
+      </div>
     </div>
   <% end %>
 </section>
