@@ -31,7 +31,6 @@
       <%= simple_form_for [:aivss_ssvc, current_project, @issue], method: :patch do |f| %>
 
         <div
-          class="aivss-ssvc-calculator"
           data-behavior="aivss-ssvc-calc"
           data-aivss-ssvc-config="<%= Dradis::Plugins::Calculators::AIVSSSSVC::V1::FRONTEND_CONFIG.to_json %>"
           data-aivss-ssvc-fields-url="<%= calculators_aivss_ssvc_fields_path %>"
