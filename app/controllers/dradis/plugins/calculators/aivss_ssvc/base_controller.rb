@@ -6,10 +6,17 @@ module Dradis::Plugins::Calculators::AIVSSSSVC
     end
 
     def fields
-      values = params.fetch(:values, {}).permit(*V1::FIELDS).to_h
-      fields = Array(params.fetch(:fields, V1::FIELDS))
+      render plain: V1.field_output(aivss_ssvc_values_params, fields: requested_fields)
+    end
 
-      render plain: V1.field_output(values, fields: fields)
+    private
+
+    def aivss_ssvc_values_params
+      params.fetch(:values, {}).permit(*V1::FIELDS).to_h
+    end
+
+    def requested_fields
+      Array(params.fetch(:fields, V1::FIELDS))
     end
   end
 end

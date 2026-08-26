@@ -10,7 +10,7 @@ module Dradis::Plugins::Calculators::AIVSSSSVC
 
     def update
       aivss_ssvc_fields = Hash[
-        *params[:aivss_ssvc_fields].to_s.scan(FieldParser::FIELDS_REGEX).flatten.map(&:strip)
+        *aivss_ssvc_fields_param.scan(FieldParser::FIELDS_REGEX).flatten.map(&:strip)
       ]
 
       aivss_ssvc_fields.each do |name, value|
@@ -31,6 +31,10 @@ module Dradis::Plugins::Calculators::AIVSSSSVC
 
     private
 
+    def aivss_ssvc_fields_param
+      params.fetch(:aivss_ssvc_fields, '').to_s
+    end
+
     # There is no vector string in AIVSS-SSVC, so the state of the form is
     # rebuilt out of the issue's individual fields.
     def set_aivss_ssvc_selection
@@ -42,10 +46,12 @@ module Dradis::Plugins::Calculators::AIVSSSSVC
       default_fields = Engine.settings.fields.split(',').map(&:strip) & V1::FIELDS
       @enabled_fields = existing_fields.any? ? existing_fields : default_fields
 
+      input_fields = %w[Threat Threat.Value Vulnerability Vulnerability.Value Impact Impact.Value]
+
       grouped_fields = V1::FIELDS.group_by do |field|
         name = field.delete_prefix('AIVSS-SSVC.')
 
-        if %w[Threat Threat.Value Vulnerability Vulnerability.Value Impact Impact.Value].include?(name)
+        if input_fields.include?(name)
           'Inputs'
         elsif V1::FACTORS.any? { |factor| factor[:field] == name }
           'Capability Factors'
