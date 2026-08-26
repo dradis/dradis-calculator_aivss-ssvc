@@ -2,14 +2,15 @@ document.addEventListener('turbo:load', () => {
   const root = document.querySelector('[data-behavior~=aivss-ssvc-calc]');
   if (!root) return;
 
-  const config = JSON.parse(root.dataset.aivssSsvcConfig);
-  const OUTCOME_MATRIX = config.outcomeMatrix;
-  const TIMELINE_BY_OUTCOME = config.timelineByOutcome;
-  const BADGE_CLASS = config.badgeClass;
-
   class AIVSSSSVCCalculator {
     constructor(root) {
       this.root = root;
+
+      const config = JSON.parse(root.dataset.aivssSsvcConfig);
+      this.outcomeMatrix = config.outcomeMatrix;
+      this.timelineByOutcome = config.timelineByOutcome;
+      this.badgeClass = config.badgeClass;
+
       this.inputs = {};
       root.querySelectorAll('[data-behavior~=aivss-ssvc-input]').forEach((select) => {
         this.inputs[select.dataset.input] = select;
@@ -101,7 +102,7 @@ document.addEventListener('turbo:load', () => {
     }
 
     computeOutcome(threatKey, agentKey, impactKey) {
-      return OUTCOME_MATRIX?.[threatKey]?.[agentKey]?.[impactKey] || 'Scheduled';
+      return this.outcomeMatrix?.[threatKey]?.[agentKey]?.[impactKey] || 'Scheduled';
     }
     // ----------------------------------------------- /ported from the web app
 
@@ -187,7 +188,7 @@ document.addEventListener('turbo:load', () => {
 
       const badge = this.root.querySelector('[data-behavior~=aivss-ssvc-outcome]');
       if (badge) {
-        badge.className = `aivss-ssvc-badge ${BADGE_CLASS[state.outcome] || ''}`;
+        badge.className = `aivss-ssvc-badge ${this.badgeClass[state.outcome] || ''}`;
         badge.textContent = state.outcome;
       }
 
@@ -198,15 +199,18 @@ document.addEventListener('turbo:load', () => {
       );
 
       this.setText('aivss-ssvc-outcome-text', state.outcome);
-      this.setText('aivss-ssvc-timeline', TIMELINE_BY_OUTCOME[state.outcome] || '');
+      this.setText('aivss-ssvc-timeline', this.timelineByOutcome[state.outcome] || '');
     }
 
     async writeResult() {
       if (!this.result || !this.fieldsUrl) return;
 
-      const fields = this.fieldSwitches.length
-        ? this.fieldSwitches.filter((fieldSwitch) => fieldSwitch.checked).map((fieldSwitch) => fieldSwitch.dataset.fieldName)
-        : Object.keys(this.values);
+      let fields;
+      if (this.fieldSwitches.length) {
+        fields = this.fieldSwitches.filter((fieldSwitch) => fieldSwitch.checked).map((fieldSwitch) => fieldSwitch.dataset.fieldName);
+      } else {
+        fields = Object.keys(this.values);
+      }
       const requestId = ++this.fieldRequestId;
       const csrfToken = document.querySelector('meta[name=csrf-token]')?.content;
 
@@ -224,6 +228,8 @@ document.addEventListener('turbo:load', () => {
       if (response.ok) {
         const output = await response.text();
         if (requestId === this.fieldRequestId) this.result.value = output;
+      } else {
+        console.error(`AIVSS-SSVC: failed to fetch field output (${response.status})`);
       }
     }
 
@@ -251,7 +257,7 @@ document.addEventListener('turbo:load', () => {
       values['AIVSS-SSVC.Likelihood'] = this.round2(state.likelihood);
       values['AIVSS-SSVC.RiskScore'] = this.round2(state.riskScore);
       values['AIVSS-SSVC.Outcome'] = state.outcome;
-      values['AIVSS-SSVC.Timeline'] = TIMELINE_BY_OUTCOME[state.outcome];
+      values['AIVSS-SSVC.Timeline'] = this.timelineByOutcome[state.outcome];
       values['AIVSS-SSVC.Rationale'] = state.agent.rationale;
 
       this.values = values;
