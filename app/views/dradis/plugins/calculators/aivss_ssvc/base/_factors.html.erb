@@ -10,28 +10,28 @@
         <h5 class="aivss-ssvc-group-title"><%= category_label %></h5>
         <% v1::FACTORS.select { |factor| factor[:category] == category }.each do |factor| %>
           <div class="aivss-ssvc-field">
-        <span id="aivss-ssvc-<%= factor[:id] %>-label" class="aivss-ssvc-factor-name" title="<%= factor[:description] %>">
-          <%= factor[:name] %>
-          <i class="fa-regular fa-question-circle small" aria-hidden="true"></i>
-        </span>
-        <%= hidden_field_tag factor[:id], @aivss_ssvc_selection['factors'][factor[:id]],
-              id: "aivss-ssvc-#{factor[:id]}",
-              data: {
-                behavior: 'aivss-ssvc-factor',
-                category: factor[:category],
-                field: "AIVSS-SSVC.#{factor[:field]}"
-              } %>
-        <div class="aivss-ssvc-btn-group btn-group" role="group" aria-labelledby="aivss-ssvc-<%= factor[:id] %>-label">
-          <% (1..5).each do |score| %>
-            <button
-              type="button"
-              class="btn <%= 'active btn-primary' if @aivss_ssvc_selection['factors'][factor[:id]] == score %>"
-              aria-pressed="<%= @aivss_ssvc_selection['factors'][factor[:id]] == score %>"
-              value="<%= score %>"
-              data-behavior="aivss-ssvc-choice"
-              data-select-target="aivss-ssvc-<%= factor[:id] %>"><%= score %></button>
-          <% end %>
-        </div>
+            <span id="aivss-ssvc-<%= factor[:id] %>-label" class="aivss-ssvc-factor-name" title="<%= factor[:description] %>">
+              <%= factor[:name] %>
+              <i class="fa-regular fa-question-circle small" aria-hidden="true"></i>
+            </span>
+            <%= hidden_field_tag factor[:id], @aivss_ssvc_selection['factors'][factor[:id]],
+                  id: "aivss-ssvc-#{factor[:id]}",
+                  data: {
+                    behavior: 'aivss-ssvc-factor',
+                    category: factor[:category],
+                    field: "AIVSS-SSVC.#{factor[:field]}"
+                  } %>
+            <div class="aivss-ssvc-btn-group btn-group" role="group" aria-labelledby="aivss-ssvc-<%= factor[:id] %>-label">
+              <% (1..5).each do |score| %>
+                <button
+                  type="button"
+                  class="btn <%= 'active btn-primary' if @aivss_ssvc_selection['factors'][factor[:id]] == score %>"
+                  aria-pressed="<%= @aivss_ssvc_selection['factors'][factor[:id]] == score %>"
+                  value="<%= score %>"
+                  data-behavior="aivss-ssvc-choice"
+                  data-select-target="aivss-ssvc-<%= factor[:id] %>"><%= score %></button>
+              <% end %>
+            </div>
           </div>
         <% end %>
       </section>
