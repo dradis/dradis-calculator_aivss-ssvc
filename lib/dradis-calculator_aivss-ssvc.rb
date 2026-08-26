@@ -1,5 +1,7 @@
 require 'dradis-plugins'
 
+# Single source of truth. Must run before requiring engine.rb: isolate_namespace
+# underscores the module name at require time, so both acronyms need to exist already.
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.acronym('AIVSS')
   inflect.acronym('SSVC')

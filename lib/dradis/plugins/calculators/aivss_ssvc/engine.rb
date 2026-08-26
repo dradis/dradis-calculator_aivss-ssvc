@@ -10,13 +10,6 @@ module Dradis::Plugins::Calculators::AIVSSSSVC
       settings.default_fields = 'AIVSS-SSVC.Likelihood,AIVSS-SSVC.RiskScore,AIVSS-SSVC.AgentLevel'
     end
 
-    initializer 'calculator_aivss_ssvc.inflections' do
-      ActiveSupport::Inflector.inflections do |inflect|
-        inflect.acronym('AIVSS')
-        inflect.acronym('SSVC')
-      end
-    end
-
     initializer 'calculator_aivss_ssvc.asset_precompile_paths' do |app|
       app.config.assets.precompile += [
         'dradis/plugins/calculators/aivss_ssvc/base.css',
