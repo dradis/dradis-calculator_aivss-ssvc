@@ -3,7 +3,7 @@
 }
 
 .aivss-ssvc-group {
-  margin-bottom: 0;
+  margin-bottom: 1.5rem;
 }
 
 .aivss-ssvc-section-title {
@@ -37,9 +37,13 @@
 }
 
 .aivss-ssvc-factor-categories {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
-  grid-template-columns: repeat(3, 18rem);
+}
+
+.aivss-ssvc-factor-category {
+  flex: 0 1 18rem;
 }
 
 .aivss-ssvc-calculator .aivss-ssvc-factor-categories {
@@ -243,12 +247,6 @@
 .aivss-ssvc-output-textarea:focus {
   border-color: $primary;
   box-shadow: 0 0 0 0.2rem rgba($primary, 0.15);
-}
-
-@media (max-width: 1199px) {
-  .aivss-ssvc-factor-categories {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 991px) {
