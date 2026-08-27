@@ -226,6 +226,7 @@ module Dradis::Plugins::Calculators::AIVSSSSVC
     }.freeze
 
     FIELD_NAMES = %i[
+      Vector
       Threat
       Threat.Value
       Vulnerability
@@ -264,11 +265,13 @@ module Dradis::Plugins::Calculators::AIVSSSSVC
       end.join("\n\n")
     end
 
-    # Rebuilds the state of the form out of the issue's individual AIVSS-SSVC
-    # fields. Anything missing or unrecognised falls back to DEFAULTS, so a
-    # partially scored issue still opens on a usable form.
+    # Prefers AIVSS-SSVC.Vector, since it alone survives a partial field
+    # save. Falls back to the individual fields, then to DEFAULTS.
     def self.selection_from_fields(issue_fields = {})
       issue_fields ||= {}
+
+      selection = selection_from_vector(issue_fields['AIVSS-SSVC.Vector'])
+      return selection if selection
 
       selection = { 'factors' => {} }
 
@@ -284,6 +287,23 @@ module Dradis::Plugins::Calculators::AIVSSSSVC
 
       selection
     end
+
+    # Keyed pairs (id:value), order-independent. Returns nil if any
+    # input/factor is missing or invalid, so the caller falls back.
+    def self.selection_from_vector(vector)
+      return nil if vector.blank?
+
+      pairs = vector.split('/').to_h { |pair| pair.split(':', 2) }
+
+      return nil unless INPUTS.all? { |input| input[:options].any? { |o| o[:key] == pairs[input[:id]] } }
+      return nil unless FACTORS.all? { |factor| pairs[factor[:id]].to_s.match?(/\A[1-5]\z/) }
+
+      selection = { 'factors' => {} }
+      INPUTS.each { |input| selection[input[:id]] = pairs[input[:id]] }
+      FACTORS.each { |factor| selection['factors'][factor[:id]] = pairs[factor[:id]].to_i }
+      selection
+    end
+    private_class_method :selection_from_vector
 
     # Accepts either the stored label ('Public PoC') or the internal key ('poc').
     def self.key_for(options, value)

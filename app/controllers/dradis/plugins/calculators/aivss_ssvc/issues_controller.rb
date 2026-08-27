@@ -35,8 +35,6 @@ module Dradis::Plugins::Calculators::AIVSSSSVC
       params.fetch(:aivss_ssvc_fields, '').to_s
     end
 
-    # There is no vector string in AIVSS-SSVC, so the state of the form is
-    # rebuilt out of the issue's individual fields.
     def set_aivss_ssvc_selection
       @aivss_ssvc_selection = V1.selection_from_fields(@issue.fields)
     end
@@ -48,7 +46,8 @@ module Dradis::Plugins::Calculators::AIVSSSSVC
 
       input_fields = %w[Threat Threat.Value Vulnerability Vulnerability.Value Impact Impact.Value]
 
-      grouped_fields = V1::FIELDS.group_by do |field|
+      # Vector renders separately in issues/edit.html.erb, always on.
+      grouped_fields = (V1::FIELDS - ['AIVSS-SSVC.Vector']).group_by do |field|
         name = field.delete_prefix('AIVSS-SSVC.')
 
         if input_fields.include?(name)

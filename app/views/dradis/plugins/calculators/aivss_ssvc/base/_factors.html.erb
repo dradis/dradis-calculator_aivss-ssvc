@@ -19,7 +19,8 @@
                   data: {
                     behavior: 'aivss-ssvc-factor',
                     category: factor[:category],
-                    field: "AIVSS-SSVC.#{factor[:field]}"
+                    field: "AIVSS-SSVC.#{factor[:field]}",
+                    factor_id: factor[:id]
                   } %>
             <div class="aivss-ssvc-btn-group btn-group" role="group" aria-labelledby="aivss-ssvc-<%= factor[:id] %>-label">
               <% (1..5).each do |score| %>

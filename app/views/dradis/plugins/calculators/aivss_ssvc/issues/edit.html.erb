@@ -64,6 +64,23 @@
                 - <a href="javascript:void(0)" data-behavior="aivss-ssvc-select-none">Deselect all</a>
               </div>
 
+              <% vector_field = 'AIVSS-SSVC.Vector' %>
+              <div class="mb-3">
+                <h6 class="mb-2">Vector</h6>
+                <div class="form-check form-switch mb-2">
+                  <input class="form-check-input"
+                         type="checkbox"
+                         role="switch"
+                         id="aivss-ssvc-field-<%= vector_field.parameterize %>"
+                         data-behavior="aivss-ssvc-field-switch"
+                         data-field-name="<%= vector_field %>"
+                         checked
+                         disabled>
+                  <label class="form-check-label opacity-100" for="aivss-ssvc-field-<%= vector_field.parameterize %>"><%= vector_field %></label>
+                  <p class="small mb-0" data-behavior="aivss-ssvc-field-value" data-field-name="<%= vector_field %>"></p>
+                </div>
+              </div>
+
               <% @aivss_ssvc_field_groups.each do |group_name, fields| %>
                 <div class="mb-3">
                   <h6 class="mb-2"><%= group_name %></h6>

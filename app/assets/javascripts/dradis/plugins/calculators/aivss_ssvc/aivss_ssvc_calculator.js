@@ -49,6 +49,7 @@ document.addEventListener('turbo:load', () => {
       control.addEventListener('click', (event) => {
         event.preventDefault();
         this.fieldSwitches.forEach((fieldSwitch) => {
+          if (fieldSwitch.disabled) return;
           fieldSwitch.checked = checked;
         });
         this.writeResult();
@@ -233,10 +234,18 @@ document.addEventListener('turbo:load', () => {
       }
     }
 
+    buildVector() {
+      const inputPairs = Object.entries(this.inputs).map(([id, select]) => `${id}:${this.selectedOption(select).value}`);
+      const factorPairs = this.factors.map((factor) => `${factor.dataset.factorId}:${factor.value}`);
+      return [...inputPairs, ...factorPairs].join('/');
+    }
+
     writeFields(state) {
       if (!this.result) return;
 
       const values = {};
+
+      values['AIVSS-SSVC.Vector'] = this.buildVector();
 
       values[this.inputs.threat.dataset.field] = state.threatOption.dataset.label;
       values[this.inputs.threat.dataset.valueField] = state.pThreat;
