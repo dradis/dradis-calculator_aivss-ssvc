@@ -10,6 +10,7 @@ document.addEventListener('turbo:load', () => {
       this.outcomeMatrix = config.outcomeMatrix;
       this.timelineByOutcome = config.timelineByOutcome;
       this.badgeClass = config.badgeClass;
+      this.agentLevels = config.agentLevels;
 
       this.inputs = {};
       root.querySelectorAll('[data-behavior~=aivss-ssvc-input]').forEach((select) => {
@@ -65,6 +66,10 @@ document.addEventListener('turbo:load', () => {
       return Math.round(value * 100) / 100;
     }
 
+    agentLevel(key) {
+      return this.agentLevels.find((level) => level.key === key);
+    }
+
     classifyAgent(aAvg, bAvg, cAvg) {
       const anyGE4 = aAvg >= 4.0 || bAvg >= 4.0 || cAvg >= 4.0;
       const countGE3 = (aAvg >= 3.0) + (bAvg >= 3.0) + (cAvg >= 3.0);
@@ -72,19 +77,19 @@ document.addEventListener('turbo:load', () => {
 
       if (anyGE4) {
         return {
-          key: 'primemover', label: 'Prime Mover', exposure: 8,
+          ...this.agentLevel('primemover'),
           rationale: 'At least one category average is ≥ 4.0, indicating high capability on a harm-driving dimension.'
         };
       }
       if (countGE3 >= 2) {
         return {
-          key: 'specialist', label: 'Specialist', exposure: 4,
+          ...this.agentLevel('specialist'),
           rationale: 'At least two category averages are ≥ 3.0, indicating broad moderate capability across multiple dimensions.'
         };
       }
       if (allLT25) {
         return {
-          key: 'copilot', label: 'Copilot', exposure: 2,
+          ...this.agentLevel('copilot'),
           rationale: 'All category averages are < 2.5, indicating constrained capability across execution, adaptation, and influence.'
         };
       }
@@ -92,12 +97,12 @@ document.addEventListener('turbo:load', () => {
       const strongest = Math.max(aAvg, bAvg, cAvg);
       if (strongest >= 3.0) {
         return {
-          key: 'specialist', label: 'Specialist', exposure: 4,
+          ...this.agentLevel('specialist'),
           rationale: 'The mixed profile has a strongest category average ≥ 3.0. The higher classification applies.'
         };
       }
       return {
-        key: 'copilot', label: 'Copilot', exposure: 2,
+        ...this.agentLevel('copilot'),
         rationale: 'The mixed profile has a strongest category average < 3.0. The Copilot classification applies.'
       };
     }

@@ -103,10 +103,20 @@ module Dradis::Plugins::Calculators::AIVSSSSVC
       'Immediate' => 'aivss-ssvc-badge-immediate'
     }.freeze
 
+    # Keys must match the nesting in OUTCOME_MATRIX above; classifyAgent in
+    # aivss_ssvc_calculator.js looks entries up by key rather than
+    # hardcoding them, so the two stay in sync.
+    AGENT_LEVELS = [
+      { key: 'copilot', label: 'Copilot', exposure: 2 },
+      { key: 'specialist', label: 'Specialist', exposure: 4 },
+      { key: 'primemover', label: 'Prime Mover', exposure: 8 }
+    ].freeze
+
     FRONTEND_CONFIG = {
       outcomeMatrix: OUTCOME_MATRIX,
       timelineByOutcome: TIMELINE_BY_OUTCOME,
-      badgeClass: BADGE_CLASS
+      badgeClass: BADGE_CLASS,
+      agentLevels: AGENT_LEVELS
     }.freeze
 
     INPUTS = [
